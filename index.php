@@ -1,3 +1,6 @@
+<?php
+	session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,16 +9,34 @@
 <body>
 	<form method="POST" action="">
 		<h3>Counting number</h3>
-		<p>we will count the number you're inserted above</p>
+		<p>we will count the number you're inserted above, and we will count it by session you've started</p>
 		<b>
 			<p>Separate each number with comma (,) instead</p>
 			<p>If Your number is decimal use dot (.) instead</p>
 		</b>
 		<input type="text" name="number">
-		<input type="submit" name="submit">
+		<input type="submit" name="submit" value="Start Counting">
+	</form>
+	<form method="POST">
+		<input type="hidden" name="reset">
+		<input type="submit" name="submit" value="reset session">
 	</form>
 	<?php
+
+	if (isset($_SESSION['number'])){
+
+
+	}
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+		if (isset($_POST['reset'])){
+
+			// remove all session variables
+			session_unset(); 
+
+			// destroy the session 
+			session_destroy(); 
+		}		
 
 		if (isset($_POST['number'])){
 
@@ -37,7 +58,16 @@
 				print_r($array_number);
 				echo "<br /><br />";
 
-				$count = 0;
+				if (isset($_SESSION['number'])){
+
+					$count = $_SESSION['number'];
+					echo "counter = " . $count . "<br/><br/>";
+				} else {
+
+					$count = 0;
+					echo "counter = 0<br/><br/>";
+				}
+
 				foreach ($array_number as $key => $value) {
 					
 					if ($value/1 <> 0){
@@ -51,7 +81,7 @@
 
 					}
 				}
-
+				$_SESSION['number'] = $count;
 			}
 	
 		}
